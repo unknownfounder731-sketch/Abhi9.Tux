@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Tux Paint Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Toolbar -->
+        <div class="toolbar-left">
+            <div class="toolbar-header">Tools</div>
+            <div class="tool-buttons">
+                <!-- File Tools -->
+                <button class="tool-btn" data-tool="new" title="New Canvas">
+                    <span class="tool-icon">📄</span>
+                    <span class="tool-name">New</span>
+                </button>
+                <button class="tool-btn" data-tool="import" title="Import Image">
+                    <span class="tool-icon">📁</span>
+                    <span class="tool-name">Import</span>
+                </button>
+                <button class="tool-btn" data-tool="save" title="Save Drawing">
+                    <span class="tool-icon">💾</span>
+                    <span class="tool-name">Save</span>
+                </button>
+                <button class="tool-btn" data-tool="export" title="Export Drawing">
+                    <span class="tool-icon">📤</span>
+                    <span class="tool-name">Export</span>
+                </button>
+                
+                <!-- Selection Tools -->
+                <button class="tool-btn" data-tool="selection" title="Selection Tools">
+                    <span class="tool-icon">⬜</span>
+                    <span class="tool-name">Select</span>
+                </button>
+                
+                <!-- Drawing Tools -->
+                <button class="tool-btn active" data-tool="paint" title="Paint Brush">
+                    <span class="tool-icon">🖌️</span>
+                    <span class="tool-name">Paint</span>
+                </button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser">
+                    <span class="tool-icon">🧽</span>
+                    <span class="tool-name">Eraser</span>
+                </button>
+                <button class="tool-btn" data-tool="gradient" title="Gradient Fill">
+                    <span class="tool-icon">🌈</span>
+                    <span class="tool-name">Gradient</span>
+                </button>
+                <button class="tool-btn" data-tool="fill" title="Fill Bucket">
+                    <span class="tool-icon">🪣</span>
+                    <span class="tool-name">Fill</span>
+                </button>
+                
+                <!-- Shape Tools -->
+                <button class="tool-btn" data-tool="lines" title="Line Tool">
+                    <span class="tool-icon">📏</span>
+                    <span class="tool-name">Lines</span>
+                </button>
+                <button class="tool-btn" data-tool="shapes" title="Shape Tools">
+                    <span class="tool-icon">⭕</span>
+                    <span class="tool-name">Shapes</span>
+                </button>
+                
+                <!-- Text Tools -->
+                <button class="tool-btn" data-tool="text" title="Text Tool">
+                    <span class="tool-icon">📝</span>
+                    <span class="tool-name">Text</span>
+                </button>
+                
+                <!-- Advanced Tools -->
+                <button class="tool-btn" data-tool="clone" title="Clone Tool">
+                    <span class="tool-icon">👥</span>
+                    <span class="tool-name">Clone</span>
+                </button>
+                <button class="tool-btn" data-tool="healing" title="Healing Brush">
+                    <span class="tool-icon">🩹</span>
+                    <span class="tool-name">Healing</span>
+                </button>
+                <button class="tool-btn" data-tool="liquify" title="Liquify Tool">
+                    <span class="tool-icon">🌊</span>
+                    <span class="tool-name">Liquify</span>
+                </button>
+                
+                <!-- Stamp & Magic -->
+                <button class="tool-btn" data-tool="stamp" title="Stamp Tool">
+                    <span class="tool-icon">📸</span>
+                    <span class="tool-name">Stamp</span>
+                </button>
+                <button class="tool-btn" data-tool="magic" title="Magic Effects">
+                    <span class="tool-icon">✨</span>
+                    <span class="tool-name">Magic</span>
+                </button>
+                
+                <!-- View Tools -->
+                <button class="tool-btn" data-tool="zoom" title="Zoom Tool">
+                    <span class="tool-icon">🔍</span>
+                    <span class="tool-name">Zoom</span>
+                </button>
+                
+                <!-- Edit Tools -->
+                <button class="tool-btn" data-tool="undo" title="Undo">
+                    <span class="tool-icon">↶</span>
+                    <span class="tool-name">Undo</span>
+                </button>
+                <button class="tool-btn" data-tool="redo" title="Redo">
+                    <span class="tool-icon">↷</span>
+                    <span class="tool-name">Redo</span>
+                </button>
+            </div>
+            
+            <!-- Tool Options -->
+            <div class="tool-options">
+                <div class="brush-size-control">
+                    <label>Size:</label>
+                    <input type="range" id="brushSize" min="1" max="50" value="10">
+                    <span id="brushSizeDisplay">10px</span>
+                </div>
+                <div class="opacity-control">
+                    <label>Opacity:</label>
+                    <input type="range" id="opacity" min="0" max="100" value="100">
+                    <span id="opacityDisplay">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Canvas Area -->
+        <div class="canvas-container">
+            <!-- Canvas Controls -->
+            <div class="canvas-controls">
+                <div class="zoom-controls">
+                    <button id="zoomOut">-</button>
+                    <span id="zoomLevel">100%</span>
+                    <button id="zoomIn">+</button>
+                    <button id="zoomFit" title="Fit to window">Fit</button>
+                </div>
+                <div class="canvas-actions">
+                    <button id="toggleGrid" title="Toggle Grid">Grid</button>
+                    <button id="toggleRulers" title="Toggle Rulers">Rulers</button>
+                    <button id="canvasSettings" title="Canvas Settings">Settings</button>
+                </div>
+            </div>
+            
+            <!-- Canvas Wrapper -->
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <div class="canvas-viewport" id="canvasViewport">
+                    <canvas id="drawingCanvas" width="800" height="600"></canvas>
+                    
+                    <!-- Canvas Resize Handles -->
+                    <div class="resize-handle resize-n" data-direction="n"></div>
+                    <div class="resize-handle resize-ne" data-direction="ne"></div>
+                    <div class="resize-handle resize-e" data-direction="e"></div>
+                    <div class="resize-handle resize-se" data-direction="se"></div>
+                    <div class="resize-handle resize-s" data-direction="s"></div>
+                    <div class="resize-handle resize-sw" data-direction="sw"></div>
+                    <div class="resize-handle resize-w" data-direction="w"></div>
+                    <div class="resize-handle resize-nw" data-direction="nw"></div>
+                    
+                    <!-- Selection Overlay -->
+                    <div class="selection-overlay" id="selectionOverlay"></div>
+                    
+                    <!-- Grid Overlay -->
+                    <div class="grid-overlay" id="gridOverlay"></div>
+                </div>
+            </div>
+            
+            <!-- Text Input Overlay -->
+            <div id="textInput" class="text-input-overlay hidden">
+                <textarea id="textContent" placeholder="Type your text here..."></textarea>
+                <div class="text-controls">
+                    <select id="fontFamily">
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times</option>
+                        <option value="Comic Sans MS">Comic Sans</option>
+                        <option value="Impact">Impact</option>
+                        <option value="Courier New">Courier</option>
+                    </select>
+                    <input type="range" id="fontSize" min="12" max="72" value="24">
+                    <span id="fontSizeDisplay">24px</span>
+                    <button id="acceptText" class="btn btn--primary">✓</button>
+                    <button id="cancelText" class="btn btn--secondary">✗</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="toolbar-right">
+            <div class="panel-tabs">
+                <button class="tab-btn active" data-panel="options" title="Tool Options">Options</button>
+                <button class="tab-btn" data-panel="layers" title="Layers">Layers</button>
+                <button class="tab-btn" data-panel="history" title="History">History</button>
+            </div>
+            
+            <!-- Tool Options Panel -->
+            <div class="panel-content" id="optionsPanel">
+                <div class="toolbar-header" id="selectorTitle">Brushes</div>
+                <div class="selector-content" id="selectorContent">
+                    <!-- Dynamic content based on selected tool -->
+                </div>
+            </div>
+            
+            <!-- Layers Panel -->
+            <div class="panel-content hidden" id="layersPanel">
+                <div class="toolbar-header">Layers</div>
+                <div class="layer-controls">
+                    <button id="addLayer" class="btn btn--sm">Add Layer</button>
+                    <button id="deleteLayer" class="btn btn--sm">Delete</button>
+                    <button id="duplicateLayer" class="btn btn--sm">Duplicate</button>
+                </div>
+                <div class="layers-list" id="layersList">
+                    <!-- Dynamic layer list -->
+                </div>
+                <div class="blend-controls">
+                    <label>Blend Mode:</label>
+                    <select id="blendMode">
+                        <option value="normal">Normal</option>
+                        <option value="multiply">Multiply</option>
+                        <option value="screen">Screen</option>
+                        <option value="overlay">Overlay</option>
+                        <option value="soft-light">Soft Light</option>
+                        <option value="hard-light">Hard Light</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- History Panel -->
+            <div class="panel-content hidden" id="historyPanel">
+                <div class="toolbar-header">History</div>
+                <div class="history-list" id="historyList">
+                    <!-- Dynamic history list -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Color Palette -->
+        <div class="color-palette">
+            <div class="toolbar-header">Colors</div>
+            <div class="color-section">
+                <div class="current-colors">
+                    <div class="current-color" id="currentColor" title="Current Color"></div>
+                    <div class="current-bg-color" id="currentBgColor" title="Background Color"></div>
+                </div>
+                <div class="color-grid">
+                    <button class="color-btn active" data-color="#000000" style="background-color: #000000;"></button>
+                    <button class="color-btn" data-color="#FFFFFF" style="background-color: #FFFFFF;"></button>
+                    <button class="color-btn" data-color="#FF0000" style="background-color: #FF0000;"></button>
+                    <button class="color-btn" data-color="#00FF00" style="background-color: #00FF00;"></button>
+                    <button class="color-btn" data-color="#0000FF" style="background-color: #0000FF;"></button>
+                    <button class="color-btn" data-color="#FFFF00" style="background-color: #FFFF00;"></button>
+                    <button class="color-btn" data-color="#FF8000" style="background-color: #FF8000;"></button>
+                    <button class="color-btn" data-color="#8000FF" style="background-color: #8000FF;"></button>
+                    <button class="color-btn" data-color="#FF0080" style="background-color: #FF0080;"></button>
+                    <button class="color-btn" data-color="#008080" style="background-color: #008080;"></button>
+                    <button class="color-btn" data-color="#800080" style="background-color: #800080;"></button>
+                    <button class="color-btn" data-color="#808000" style="background-color: #808000;"></button>
+                    <button class="color-btn" data-color="#C0C0C0" style="background-color: #C0C0C0;"></button>
+                    <button class="color-btn" data-color="#808080" style="background-color: #808080;"></button>
+                    <button class="color-btn" data-color="#400000" style="background-color: #400000;"></button>
+                    <button class="color-btn" data-color="#004000" style="background-color: #004000;"></button>
+                    <button class="color-btn" data-color="#000040" style="background-color: #000040;"></button>
+                    <button class="color-btn" data-color="#404000" style="background-color: #404000;"></button>
+                    <button class="color-btn" data-color="#400040" style="background-color: #400040;"></button>
+                    <button class="color-btn" data-color="#004040" style="background-color: #004040;"></button>
+                </div>
+                <div class="color-tools">
+                    <button class="color-picker-btn" id="colorPicker" title="Color Picker">🎨</button>
+                    <button class="gradient-btn" id="gradientEditor" title="Gradient Editor">🌈</button>
+                    <button class="swap-colors-btn" id="swapColors" title="Swap Colors">⇄</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Panels -->
+        
+        <!-- Canvas Settings Modal -->
+        <div id="canvasModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Canvas Settings</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Preset Size:</label>
+                        <select id="canvasPreset">
+                            <option value="custom">Custom</option>
+                            <option value="640x480">Small (640×480)</option>
+                            <option value="800x600">Medium (800×600)</option>
+                            <option value="1024x768">Large (1024×768)</option>
+                            <option value="1920x1080">HD (1920×1080)</option>
+                            <option value="500x500">Square Small</option>
+                            <option value="1000x1000">Square Large</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Width:</label>
+                        <input type="number" id="canvasWidth" value="800" min="100" max="4000">
+                    </div>
+                    <div class="form-group">
+                        <label>Height:</label>
+                        <input type="number" id="canvasHeight" value="600" min="100" max="4000">
+                    </div>
+                    <div class="form-group">
+                        <label>Background:</label>
+                        <input type="color" id="canvasBackground" value="#FFFFFF">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="applyCanvas" class="btn btn--primary">Apply</button>
+                    <button id="cancelCanvas" class="btn btn--secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Export Modal -->
+        <div id="exportModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Export Drawing</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Format:</label>
+                        <select id="exportFormat">
+                            <option value="png">PNG</option>
+                            <option value="jpg">JPEG</option>
+                            <option value="gif">GIF</option>
+                            <option value="svg">SVG</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="qualityGroup">
+                        <label>Quality:</label>
+                        <input type="range" id="exportQuality" min="0" max="100" value="90">
+                        <span id="qualityDisplay">90%</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Scale:</label>
+                        <select id="exportScale">
+                            <option value="1">100%</option>
+                            <option value="2">200%</option>
+                            <option value="0.5">50%</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="doExport" class="btn btn--primary">Export</button>
+                    <button id="cancelExport" class="btn btn--secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filters Panel -->
+        <div id="filtersPanel" class="floating-panel hidden">
+            <div class="panel-header">
+                <h4>Filters & Effects</h4>
+                <button class="panel-close">&times;</button>
+            </div>
+            <div class="panel-body">
+                <div class="filter-categories">
+                    <div class="filter-category">
+                        <h5>Blur</h5>
+                        <button class="filter-btn" data-filter="blur">Blur</button>
+                        <button class="filter-btn" data-filter="gaussian-blur">Gaussian Blur</button>
+                        <button class="filter-btn" data-filter="motion-blur">Motion Blur</button>
+                    </div>
+                    <div class="filter-category">
+                        <h5>Enhance</h5>
+                        <button class="filter-btn" data-filter="sharpen">Sharpen</button>
+                        <button class="filter-btn" data-filter="unsharp-mask">Unsharp Mask</button>
+                    </div>
+                    <div class="filter-category">
+                        <h5>Adjust</h5>
+                        <button class="filter-btn" data-filter="brightness">Brightness</button>
+                        <button class="filter-btn" data-filter="contrast">Contrast</button>
+                        <button class="filter-btn" data-filter="saturation">Saturation</button>
+                    </div>
+                    <div class="filter-category">
+                        <h5>Artistic</h5>
+                        <button class="filter-btn" data-filter="emboss">Emboss</button>
+                        <button class="filter-btn" data-filter="oil-paint">Oil Paint</button>
+                        <button class="filter-btn" data-filter="watercolor">Watercolor</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tux Mascot -->
+        <div class="tux-mascot" id="tuxMascot">
+            🐧
+            <div class="tux-speech hidden" id="tuxSpeech">
+                Welcome to Enhanced Tux Paint! Try the new features!
+            </div>
+        </div>
+
+        <!-- Hidden file inputs -->
+        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        <input type="file" id="importInput" accept="image/*" multiple style="display: none;">
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
